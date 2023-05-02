@@ -121,11 +121,11 @@ class BirdDataset(Dataset):
             else:
                 data_year = row['data_year']
                 filename = os.path.join(self.dataset_dir, f"birdclef-{int(data_year)}",
-                                        "train_audio" if data_year == 2022 else "train_short_audio", row['filename'])
+                                        "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio", row['filename'])
 
         ## wav
         if self.mode == "train":
-            wav_len_sec =  librosa.get_duration(filename=filename)
+            wav_len_sec = librosa.get_duration(filename=filename)
             duration = self.duration
             max_offset = wav_len_sec - duration
             max_offset = max(max_offset, 1)
@@ -133,7 +133,7 @@ class BirdDataset(Dataset):
         if self.mode == "val": offset = 0
 
         wav = self.load_one(filename, offset=offset, duration=self.duration)
-        if wav.shape[0] < (self.dsr): wav = np.pad(wav, (0, self.dsr - wav.shape[0]))
+        if wav.shape[0] < (self.dsr): wav = np.pad(wav, (0, self.dsr - wav.shape[0]))  # 在末尾pad, 0表示开头pad 0个元素
         if self.transforms: wav = self.transforms(wav, self.sr)
 
         ## labels

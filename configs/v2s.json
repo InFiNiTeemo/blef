@@ -1,10 +1,10 @@
 {
   "network": "TimmClassifier",
   "encoder_params": {
-    "encoder": "tf_efficientnetv2_s_in21k",
+    "encoder": "eca_nfnet_l0",
     "duration": 20,
     "val_duration": 10,
-    "classes": 4332,
+    "classes": 747,
     "backbone_params": {
       "in_chans": 1,
       "drop_path_rate": 0.2,
@@ -22,8 +22,8 @@
   "train_transforms": "set_2",
   "multiplier": 1,
   "optimizer": {
-    "train_bs": 64,
-    "val_bs": 64,
+    "train_bs": 32,
+    "val_bs": 32,
     "type": "AdamW",
     "learning_rate": 3e-4,
     "weight_decay": 1e-2,

@@ -4,7 +4,7 @@
     "encoder": "eca_nfnet_l0",
     "duration": 5,
     "val_duration": 5,
-    "classes": 21,
+    "classes": 747,
     "backbone_params": {
       "in_chans": 1,
       "drop_path_rate": 0.2,
@@ -22,8 +22,8 @@
   "train_transforms": "set_1",
   "multiplier": 2,
   "optimizer": {
-    "train_bs": 64,
-    "val_bs": 64,
+    "train_bs": 32,
+    "val_bs": 32,
     "type": "AdamW",
     "learning_rate": 3e-4,
     "weight_decay": 1e-2,

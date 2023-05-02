@@ -4,7 +4,7 @@
     "encoder": "eca_nfnet_l0",
     "duration": 15,
     "val_duration": 5,
-    "classes": 21,
+    "classes": 264,
     "backbone_params": {
       "in_chans": 1,
       "drop_path_rate": 0.2,

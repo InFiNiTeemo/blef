@@ -92,7 +92,7 @@ class BCEF1WLossCalculator(LossCalculator):
         return self.loss(outputs, targets)
 
 
-class BCEBirdLossCalculator(LossCalculator):
+class BCEBirdLossCalculator(LossCalculator):  # 相当于对logits做了sigmoid
     def __init__(self, pos_weight = None, **kwargs):
         super().__init__()
         if pos_weight is not None:

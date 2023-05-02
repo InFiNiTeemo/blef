@@ -35,7 +35,7 @@ class BirdDatasetOOF(Dataset):
         row = self.df.iloc[i]
         data_year = row['data_year']
         filename = os.path.join(self.dataset_dir, f"birdclef-{data_year}",
-                                "train_audio" if data_year == 2022 else "train_short_audio", row['filename'])
+                                "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio", row['filename'])
 
         duration_seconds = librosa.get_duration(filename=filename, sr=None)
         if duration_seconds < self.duration + self.step:
@@ -116,7 +116,7 @@ class BirdDatasetShortClassifier(Dataset):
         row = self.df.iloc[i]
         data_year = row['data_year']
         filename = os.path.join(self.dataset_dir, f"birdclef-{data_year}",
-                                "train_audio" if data_year == 2022 else "train_short_audio", row['filename'])
+                                "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio", row['filename'])
         is_validation = self.mode == "val"
 
 

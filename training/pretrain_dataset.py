@@ -22,9 +22,13 @@ class PretrainDataset(Dataset):
             ["primary_label", "secondary_labels", "filename"]]
         df2022 = pd.read_csv(os.path.join(dataset_dir, "birdclef-2022/train_metadata.csv"))[
             ["primary_label", "secondary_labels", "filename"]]
+        df2023 = pd.read_csv(os.path.join(dataset_dir, "birdclef-2023/train_metadata.csv"))[
+            ["primary_label", "secondary_labels", "filename"]]
         df2021["data_year"] = 2021
         df2022["data_year"] = 2022
-        df = pd.concat([df2021, df2022], ignore_index=True)
+        df2023["data_year"] = 2023
+        df = pd.concat([df2021, df2022, df2023], ignore_index=True)
+
         print(len(df))
         df = df[~df.primary_label.isin(ignore_labels)]
         print(len(df))
@@ -52,7 +56,7 @@ class PretrainDataset(Dataset):
         row = self.df.iloc[i]
         data_year = row['data_year']
         filename = os.path.join(self.dataset_dir, f"birdclef-{data_year}",
-                                "train_audio" if data_year == 2022 else "train_short_audio", row["primary_label"], row['filename'].split("/")[-1])
+                                "train_audio" if data_year != 2021 else "train_short_audio", row["primary_label"], row['filename'].split("/")[-1])
 
         ## wav
 

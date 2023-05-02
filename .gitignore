@@ -137,3 +137,8 @@ input/*
 input/aicrowd2020_noise_30sec/*
 input/ff1010bird_nocall/*
 input/train_soundscapes/*
+
+#weights
+weights/*
+checkpoints/*
+*.pth
