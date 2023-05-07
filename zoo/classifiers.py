@@ -592,10 +592,15 @@ class TimmClassifier_v3(nn.Module):
             self.time_mask = ta.transforms.TimeMasking(64, iid_masks=True)
 
         ## fix https://github.com/rwightman/pytorch-image-models/issues/488#issuecomment-796322390
-        print("pretrained model...")
+
         print(kwargs['backbone_params'])
+
+        pretrain = kwargs.get("pretrain", True)
+        if pretrain:
+            print("pretrained model...")
+
         base_model = timm.create_model(
-            encoder, pretrained=True,
+            encoder, pretrained=pretrain,
             features_only=True, out_indices=([4]),
             **kwargs['backbone_params']
         )
