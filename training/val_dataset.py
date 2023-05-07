@@ -159,6 +159,139 @@ class BirdDataset(Dataset):
         return len(self.df)
 
 
+class BirdDataset_img(Dataset):
+    def __init__(
+            self,
+            mode: str,
+            folds_csv: str,
+            dataset_dir: str,
+            fold: int = 0,
+            n_classes: int = 21,
+            transforms=None,
+            multiplier: int = 1,
+            duration: int = 30,
+            val_duration: int = 5,
+    ):
+        ## many parts from https://github.com/ChristofHenkel/kaggle-birdclef2021-2nd-place/blob/main/data/ps_ds_2.py
+        self.folds_csv = folds_csv
+        self.df = pd.read_csv(folds_csv)
+        # take sorted labels from full df
+        birds = sorted(list(set(self.df.primary_label.values)))
+        print('Number of primary labels ', len(birds))
+        if mode == "train":
+            self.df = self.df[self.df['fold'] != fold]
+        else:
+            self.df = self.df[self.df['fold'] == fold]
+
+        self.dataset_dir = dataset_dir
+
+        self.mode = mode
+
+        self.duration = duration if mode == "train" else val_duration
+        self.sr = 32000
+        self.dsr = self.duration * self.sr
+
+        self.n_classes = n_classes
+        self.transforms = transforms
+
+        self.df["weight"] = np.clip(self.df["rating"] / self.df["rating"].max(), 0.1, 1.0)
+        vc = self.df.primary_label.value_counts()
+        dataset_length = len(self.df)
+        label_weight = {}
+        for row in vc.items():
+            label, count = row
+            label_weight[label] = math.pow(dataset_length / count, 1 / 2)
+
+        self.df["label_weight"] = self.df.primary_label.apply(lambda x: label_weight[x])
+
+        self.bird2id = {x: idx for idx, x in enumerate(birds)}
+
+        ## TODO: move augmentation assignment outside of dataset
+        if self.mode == "train":
+            print(f"mode {self.mode} - augmentation is active {train_aug}")
+            self.transforms = train_aug
+            if multiplier > 1:
+                self.df = pd.concat([self.df] * multiplier, ignore_index=True)
+
+    def load_one(self, filename, offset, duration):
+        # try:
+        wav, sr = librosa.load(filename, sr=None, offset=offset, duration=duration)
+
+        if sr != self.sr:
+            wav = librosa.resample(wav, orig_sr=sr, target_sr=self.sr)
+        # except:
+        # print("failed reading", filename)
+        return wav
+
+    def get_weights(self):
+        return self.df.label_weight.values
+
+    def __getitem__(self, i):
+        tries = 0
+        while tries < 20:
+            try:
+                tries += 1
+                return self.getitem(i)
+            except:
+                traceback.print_stack()
+                return self.getitem(random.randint(0, len(self) - 1))
+        raise Exception("OOPS, something is wrong!!!")
+
+    @staticmethod
+    def normalize(image):
+        image = image / 255.0
+        # image = torch.stack([image, image, image])
+        return image
+
+    def getitem(self, i):
+        row = self.df.iloc[i]
+        data_year = row['data_year']
+        filename = os.path.join(self.dataset_dir, f"birdclef-{int(data_year)}",
+                                "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio",
+                                row['filename']).replace(".ogg", f"_{self.duration}.npy")
+
+        image = np.load(filename)
+
+        ########## RANDOM SAMPLING ################
+        if self.mode == "train":
+            image = image[np.random.choice(len(image))]
+        else:
+            image = image[0]
+
+        #####################################################################
+
+        image = torch.tensor(image).float()
+        ## todo self.aug
+
+
+
+        image = torch.stack([image, image, image])
+        image = self.normalize(image)
+
+
+        ## labels
+        labels = torch.zeros((self.n_classes,))
+        labels[self.bird2id[row['primary_label']]] = 1.0
+        for x in ast.literal_eval(row['secondary_labels']):
+            try:
+                labels[self.bird2id[x]] = 1.0
+            except:
+                ## if not in 21 classes, ignore
+                continue
+
+        ## weight
+        weight = torch.tensor(row['weight'])
+
+        return {
+            "img": image,
+            "labels": labels,
+            "weight": weight
+        }
+
+    def __len__(self):
+        return len(self.df)
+
+
 if __name__ == "__main__":
     print("run")
     dataset = BirdDataset(mode="train", folds_csv="../pseudo_set_1.csv", dataset_dir="/mnt/d/kaggle/input/", fold=0, transforms=None)

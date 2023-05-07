@@ -5,7 +5,7 @@ from datetime import timedelta
 from IPython.display import clear_output
 
 
-COMP_NAME = "nbme-score-clinical-patient-notes"
+COMP_NAME = "birdclef-2023"
 
 CHECK_INTERVAL = 1  # minutes
 MAX_HOUR = 9

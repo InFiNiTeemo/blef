@@ -128,6 +128,11 @@ class PytorchTrainer(ABC):
                     for k, v in metrics.items():
                         self.summary_writer.add_scalar('val/{}'.format(k), float(v), global_step=self.current_epoch)
 
+            # for pretrain save per 10 epoch
+            if (self.current_epoch + 1) % 10 == 0:
+                if self.train_config.local_rank == 0:
+                    self._save_best({f"_e{self.current_epoch+1}": 0})
+
     def _save_last(self):
         self.model = self.model.eval()
         torch.save({
@@ -233,7 +238,7 @@ class PytorchTrainer(ABC):
             train_sampler.set_epoch(self.current_epoch)
         elif hasattr(self.train_data, "get_weights"):
             print("Using WeightedRandomSampler")
-            train_sampler = WeightedRandomSampler(self.train_data.get_weights(), len(self.train_data))
+            train_sampler = WeightedRandomSampler(self.train_data.get_weights(), len(self.train_data))   # 按照weight sample不同的data，
         train_data_loader = DataLoader(self.train_data, batch_size=self.train_batch_size,
                                        num_workers=self.train_config.workers,
                                        shuffle=train_sampler is None, sampler=train_sampler, pin_memory=False,

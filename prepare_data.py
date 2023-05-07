@@ -7,6 +7,9 @@ from pathlib import Path
 from tqdm import tqdm
 tqdm.pandas()
 
+from audio.process_audio import get_audios_as_images
+
+
 data_dir = Path("/kaggle/input")
 
 
@@ -18,10 +21,14 @@ def get_data(year):
     return df
 
 data = pd.concat(
-    [get_data(i) for i in range(2021, 2024)]
+    [get_data(i) for i in [2021, 2022, 2023]]
 )
 # print(data.head())
 data = data[["filename", "primary_label", "secondary_labels", "rating", "time", "data_year"]]
+
+# process to image
+data["fold"] = 0
+# get_audios_as_images(data)
 
 #t = copy.deepcopy(data)
 #t = t[t["data_year"].isin([2021])]
@@ -51,10 +58,22 @@ data["duration"] = data.progress_apply(get_duration, axis=1)
 # print(data.head())
 data["duration"] = data["duration"].astype("int")
 
+
 from utils.dataset_splitter import KFold
 kfold = KFold(random_seed=42, k_folds=5)
-data = kfold.group_split(data, "primary_label")
+# 修正class过少的
+
+data.drop("fold", axis=1, inplace=True)
+data = kfold.stratified_split(data, "primary_label").rename(columns={"kfold": "fold"})
 print(data.head(30))
 
+# get_audios_as_images(data)
 data.to_csv("folds.csv", index=False)
+
+
+
+
+
+
+
 

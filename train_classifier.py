@@ -22,7 +22,7 @@ from typing import Dict
 import numpy as np
 import torch.distributed
 import torch.distributed as dist
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, precision_score, average_precision_score
 from torch.cuda import empty_cache
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -84,22 +84,27 @@ class BirdEvaluator(Evaluator):
             gts = np.concatenate(gts, axis=0)
             preds = np.concatenate(preds, axis=0)
             #for threshold in np.arange(0.1, 0.9, 0.05):
-            for threshold in [0.5]:
-                tnr = tn_score(torch.from_numpy(preds > threshold).float(), torch.from_numpy(gts))
-                tpr = tp_score(torch.from_numpy(preds > threshold).float(), torch.from_numpy(gts))
-                print(f"TPR: {tpr.item():0.4f} TNR: {tnr.item():0.4f}")
-                lb = float((tpr + tnr) / 2)
-                f1s = bird_metric.get_f1(gts, preds, threshold=threshold)
-                #print(classification_report(gts, preds > threshold, target_names=CLASSES_21))
-                if lb > best_lb:
-                    best_lb = lb
-                    best_f1 = f1s
-                    best_threshold = threshold
+            acc = average_precision_score(
+                gts,
+                preds,
+                average='macro',
+            )
+
+            pad_3 = bird_metric.padded_cmap(gts, preds, 3)
+            pad_5 = bird_metric.padded_cmap(gts, preds, 5)
+            lb = pad_5
+            f1s = bird_metric.get_f1(gts, preds)
+            #print(classification_report(gts, preds > threshold, target_names=CLASSES_21))
+            if lb > best_lb:
+                best_lb = lb
+                best_f1 = f1s
+
+            print(f"=>pad_5:{pad_5:.4f},   pad_3:{pad_3:.4f},   acc:{acc:.4f}")
 
         if distributed:
             dist.barrier()
         empty_cache()
-        return {"f1_score": best_f1, "lb": best_lb, 'threshold': best_threshold}
+        return {"f1_score": best_f1, "lb": best_lb}
 
     def get_improved_metrics(self, prev_metrics: Dict, current_metrics: Dict) -> Dict:
         improved = {}
