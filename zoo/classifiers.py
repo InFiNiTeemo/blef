@@ -595,12 +595,12 @@ class TimmClassifier_v3(nn.Module):
 
         print(kwargs['backbone_params'])
 
-        pretrain = kwargs.get("pretrain", True)
-        if pretrain:
+        pretrained = kwargs.get("pretrained", True)
+        if pretrained:
             print("pretrained model...")
 
         base_model = timm.create_model(
-            encoder, pretrained=pretrain,
+            encoder, pretrained=pretrained,
             features_only=True, out_indices=([4]),
             **kwargs['backbone_params']
         )
