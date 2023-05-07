@@ -561,7 +561,6 @@ class TimmClassifier_v1(nn.Module):
 
 class TimmClassifier_v3(nn.Module):
     def __init__(self, encoder: str,
-                 pretrained=True,
                  classes=21,
                  enable_masking=False,
                  **kwargs
