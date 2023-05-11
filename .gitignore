@@ -142,3 +142,6 @@ input/train_soundscapes/*
 weights/*
 checkpoints/*
 *.pth
+
+# logs
+output.txt

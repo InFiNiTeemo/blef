@@ -1,0 +1,675 @@
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 1024, 'hop_size': 320, 'fmin': 50, 'fmax': 14000, 'mel_bins': 128, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_3', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 0
+    transforms                set_3
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7fa7ec3f4a30>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v3.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v3', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18490 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.8218,   pad_3:0.7714,   acc:0.4716
+f1_score improved from 0.000000 to 0.340829
+lb improved from 0.000000 to 0.821847
+Using WeightedRandomSampler
+=>pad_5:0.8529,   pad_3:0.8101,   acc:0.5384
+f1_score improved from 0.340829 to 0.465509
+lb improved from 0.821847 to 0.852883
+Using WeightedRandomSampler
+=>pad_5:0.8645,   pad_3:0.8246,   acc:0.5649
+f1_score improved from 0.465509 to 0.475083
+lb improved from 0.852883 to 0.864461
+Using WeightedRandomSampler
+=>pad_5:0.8730,   pad_3:0.8354,   acc:0.5835
+f1_score improved from 0.475083 to 0.505752
+lb improved from 0.864461 to 0.872974
+Using WeightedRandomSampler
+=>pad_5:0.8772,   pad_3:0.8412,   acc:0.5948
+f1_score improved from 0.505752 to 0.528586
+lb improved from 0.872974 to 0.877217
+Using WeightedRandomSampler
+=>pad_5:0.8816,   pad_3:0.8463,   acc:0.6014
+f1_score 0.528586 current 0.524006
+lb improved from 0.877217 to 0.881604
+Using WeightedRandomSampler
+=>pad_5:0.8798,   pad_3:0.8448,   acc:0.6067
+f1_score improved from 0.528586 to 0.536618
+lb 0.881604 current 0.879790
+Using WeightedRandomSampler
+=>pad_5:0.8842,   pad_3:0.8501,   acc:0.6141
+f1_score improved from 0.536618 to 0.548015
+lb improved from 0.881604 to 0.884151
+Using WeightedRandomSampler
+=>pad_5:0.8880,   pad_3:0.8555,   acc:0.6290
+f1_score 0.548015 current 0.544537
+lb improved from 0.884151 to 0.888019
+Using WeightedRandomSampler
+=>pad_5:0.8940,   pad_3:0.8628,   acc:0.6389
+f1_score improved from 0.548015 to 0.573029
+lb improved from 0.888019 to 0.894044
+Using WeightedRandomSampler
+=>pad_5:0.8914,   pad_3:0.8590,   acc:0.6277
+f1_score 0.573029 current 0.566635
+lb 0.894044 current 0.891358
+Using WeightedRandomSampler
+=>pad_5:0.8944,   pad_3:0.8634,   acc:0.6398
+f1_score improved from 0.573029 to 0.575315
+lb improved from 0.894044 to 0.894365
+Using WeightedRandomSampler
+=>pad_5:0.8962,   pad_3:0.8655,   acc:0.6385
+f1_score improved from 0.575315 to 0.583641
+lb improved from 0.894365 to 0.896243
+Using WeightedRandomSampler
+=>pad_5:0.8969,   pad_3:0.8666,   acc:0.6455
+f1_score 0.583641 current 0.581242
+lb improved from 0.896243 to 0.896876
+Using WeightedRandomSampler
+=>pad_5:0.8979,   pad_3:0.8675,   acc:0.6451
+f1_score 0.583641 current 0.575020
+lb improved from 0.896876 to 0.897879
+Using WeightedRandomSampler
+=>pad_5:0.8984,   pad_3:0.8686,   acc:0.6504
+f1_score 0.583641 current 0.582958
+lb improved from 0.897879 to 0.898372
+Using WeightedRandomSampler
+=>pad_5:0.8997,   pad_3:0.8701,   acc:0.6530
+f1_score 0.583641 current 0.582408
+lb improved from 0.898372 to 0.899706
+Using WeightedRandomSampler
+=>pad_5:0.9005,   pad_3:0.8712,   acc:0.6566
+f1_score improved from 0.583641 to 0.586709
+lb improved from 0.899706 to 0.900478
+Using WeightedRandomSampler
+=>pad_5:0.8989,   pad_3:0.8690,   acc:0.6505
+f1_score 0.586709 current 0.580397
+lb 0.900478 current 0.898860
+Using WeightedRandomSampler
+=>pad_5:0.8997,   pad_3:0.8701,   acc:0.6527
+f1_score 0.586709 current 0.583412
+lb 0.900478 current 0.899741
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 1024, 'hop_size': 320, 'fmin': 50, 'fmax': 14000, 'mel_bins': 128, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 0
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7fb519fd4a30>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v0.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v0_e10', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e10', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e10'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e10' (epoch 9)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18490 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.8111,   pad_3:0.7578,   acc:0.4479
+f1_score improved from 0.000000 to 0.335157
+lb improved from 0.000000 to 0.811088
+Using WeightedRandomSampler
+=>pad_5:0.8395,   pad_3:0.7939,   acc:0.5093
+f1_score improved from 0.335157 to 0.426139
+lb improved from 0.811088 to 0.839512
+Using WeightedRandomSampler
+=>pad_5:0.8632,   pad_3:0.8231,   acc:0.5600
+f1_score improved from 0.426139 to 0.479665
+lb improved from 0.839512 to 0.863175
+Using WeightedRandomSampler
+=>pad_5:0.8675,   pad_3:0.8287,   acc:0.5715
+f1_score improved from 0.479665 to 0.493914
+lb improved from 0.863175 to 0.867498
+Using WeightedRandomSampler
+=>pad_5:0.8728,   pad_3:0.8357,   acc:0.5882
+f1_score improved from 0.493914 to 0.508708
+lb improved from 0.867498 to 0.872833
+Using WeightedRandomSampler
+=>pad_5:0.8735,   pad_3:0.8367,   acc:0.5865
+f1_score improved from 0.508708 to 0.518198
+lb improved from 0.872833 to 0.873536
+Using WeightedRandomSampler
+=>pad_5:0.8780,   pad_3:0.8422,   acc:0.5958
+f1_score improved from 0.518198 to 0.524668
+lb improved from 0.873536 to 0.877967
+Using WeightedRandomSampler
+=>pad_5:0.8834,   pad_3:0.8491,   acc:0.6102
+f1_score improved from 0.524668 to 0.540085
+lb improved from 0.877967 to 0.883442
+Using WeightedRandomSampler
+=>pad_5:0.8843,   pad_3:0.8512,   acc:0.6203
+f1_score improved from 0.540085 to 0.545307
+lb improved from 0.883442 to 0.884343
+Using WeightedRandomSampler
+=>pad_5:0.8814,   pad_3:0.8469,   acc:0.6102
+f1_score 0.545307 current 0.543080
+lb 0.884343 current 0.881380
+Using WeightedRandomSampler
+=>pad_5:0.8892,   pad_3:0.8566,   acc:0.6265
+f1_score improved from 0.545307 to 0.552515
+lb improved from 0.884343 to 0.889228
+Using WeightedRandomSampler
+=>pad_5:0.8889,   pad_3:0.8567,   acc:0.6299
+f1_score improved from 0.552515 to 0.567884
+lb 0.889228 current 0.888909
+Using WeightedRandomSampler
+=>pad_5:0.8878,   pad_3:0.8552,   acc:0.6245
+f1_score 0.567884 current 0.566062
+lb 0.889228 current 0.887834
+Using WeightedRandomSampler
+=>pad_5:0.8890,   pad_3:0.8563,   acc:0.6272
+f1_score 0.567884 current 0.564515
+lb 0.889228 current 0.889034
+Using WeightedRandomSampler
+=>pad_5:0.8886,   pad_3:0.8559,   acc:0.6271
+f1_score improved from 0.567884 to 0.568923
+lb 0.889228 current 0.888559
+Using WeightedRandomSampler
+=>pad_5:0.8857,   pad_3:0.8529,   acc:0.6256
+f1_score improved from 0.568923 to 0.570176
+lb 0.889228 current 0.885749
+Using WeightedRandomSampler
+=>pad_5:0.8904,   pad_3:0.8582,   acc:0.6317
+f1_score 0.570176 current 0.568121
+lb improved from 0.889228 to 0.890443
+Using WeightedRandomSampler
+=>pad_5:0.8880,   pad_3:0.8554,   acc:0.6285
+f1_score improved from 0.570176 to 0.572595
+lb 0.890443 current 0.887981
+Using WeightedRandomSampler
+=>pad_5:0.8893,   pad_3:0.8569,   acc:0.6310
+f1_score improved from 0.572595 to 0.578581
+lb 0.890443 current 0.889290
+Using WeightedRandomSampler
+=>pad_5:0.8915,   pad_3:0.8595,   acc:0.6339
+f1_score 0.578581 current 0.573044
+lb improved from 0.890443 to 0.891461
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 2048, 'hop_size': 512, 'fmin': 0, 'fmax': 16000, 'mel_bins': 256, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 0
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7f5058dc8a30>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v4.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v4', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of mel_spec.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of mel_spec.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of wav2img.0.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of wav2img.0.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18490 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.7155,   pad_3:0.6450,   acc:0.2830
+f1_score improved from 0.000000 to 0.191399
+lb improved from 0.000000 to 0.715514
+Using WeightedRandomSampler
+=>pad_5:0.7850,   pad_3:0.7278,   acc:0.4047
+f1_score improved from 0.191399 to 0.316864
+lb improved from 0.715514 to 0.784960
+Using WeightedRandomSampler
+=>pad_5:0.8060,   pad_3:0.7537,   acc:0.4494
+f1_score improved from 0.316864 to 0.376511
+lb improved from 0.784960 to 0.805998
+Using WeightedRandomSampler
+=>pad_5:0.8132,   pad_3:0.7628,   acc:0.4675
+f1_score improved from 0.376511 to 0.391227
+lb improved from 0.805998 to 0.813172
+Using WeightedRandomSampler
+=>pad_5:0.8301,   pad_3:0.7836,   acc:0.5022
+f1_score improved from 0.391227 to 0.439138
+lb improved from 0.813172 to 0.830075
+Using WeightedRandomSampler
+=>pad_5:0.8351,   pad_3:0.7897,   acc:0.5152
+f1_score improved from 0.439138 to 0.453183
+lb improved from 0.830075 to 0.835079
+Using WeightedRandomSampler
+=>pad_5:0.8433,   pad_3:0.7999,   acc:0.5302
+f1_score improved from 0.453183 to 0.470646
+lb improved from 0.835079 to 0.843283
+Using WeightedRandomSampler
+=>pad_5:0.8450,   pad_3:0.8024,   acc:0.5375
+f1_score improved from 0.470646 to 0.473398
+lb improved from 0.843283 to 0.845007
+Using WeightedRandomSampler
+=>pad_5:0.8510,   pad_3:0.8096,   acc:0.5478
+f1_score improved from 0.473398 to 0.480134
+lb improved from 0.845007 to 0.851034
+Using WeightedRandomSampler
+=>pad_5:0.8555,   pad_3:0.8150,   acc:0.5557
+f1_score improved from 0.480134 to 0.489123
+lb improved from 0.851034 to 0.855496
+Using WeightedRandomSampler
+=>pad_5:0.8537,   pad_3:0.8132,   acc:0.5547
+f1_score improved from 0.489123 to 0.493351
+lb 0.855496 current 0.853693
+Using WeightedRandomSampler
+=>pad_5:0.8599,   pad_3:0.8208,   acc:0.5671
+f1_score improved from 0.493351 to 0.500418
+lb improved from 0.855496 to 0.859889
+Using WeightedRandomSampler
+=>pad_5:0.8568,   pad_3:0.8172,   acc:0.5640
+f1_score improved from 0.500418 to 0.510367
+lb 0.859889 current 0.856761
+Using WeightedRandomSampler
+=>pad_5:0.8625,   pad_3:0.8239,   acc:0.5727
+f1_score improved from 0.510367 to 0.523485
+lb improved from 0.859889 to 0.862489
+Using WeightedRandomSampler
+=>pad_5:0.8595,   pad_3:0.8202,   acc:0.5655
+f1_score 0.523485 current 0.519673
+lb 0.862489 current 0.859508
+Using WeightedRandomSampler
+=>pad_5:0.8629,   pad_3:0.8244,   acc:0.5738
+f1_score improved from 0.523485 to 0.525599
+lb improved from 0.862489 to 0.862929
+Using WeightedRandomSampler
+=>pad_5:0.8644,   pad_3:0.8266,   acc:0.5813
+f1_score improved from 0.525599 to 0.540030
+lb improved from 0.862929 to 0.864444
+Using WeightedRandomSampler
+=>pad_5:0.8643,   pad_3:0.8263,   acc:0.5768
+f1_score 0.540030 current 0.531843
+lb 0.864444 current 0.864292
+Using WeightedRandomSampler
+=>pad_5:0.8651,   pad_3:0.8273,   acc:0.5799
+f1_score 0.540030 current 0.534948
+lb improved from 0.864444 to 0.865140
+Using WeightedRandomSampler
+=>pad_5:0.8657,   pad_3:0.8283,   acc:0.5847
+f1_score 0.540030 current 0.531904
+lb improved from 0.865140 to 0.865694
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 2048, 'hop_size': 512, 'fmin': 0, 'fmax': 16000, 'mel_bins': 256, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 1
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7f8a05fdc9d0>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v4.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v4', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of mel_spec.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of mel_spec.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of wav2img.0.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of wav2img.0.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18332 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.7059,   pad_3:0.6345,   acc:0.2881
+f1_score improved from 0.000000 to 0.184610
+lb improved from 0.000000 to 0.705854
+Using WeightedRandomSampler
+=>pad_5:0.7716,   pad_3:0.7131,   acc:0.4058
+f1_score improved from 0.184610 to 0.333133
+lb improved from 0.705854 to 0.771552
+Using WeightedRandomSampler
+=>pad_5:0.8006,   pad_3:0.7477,   acc:0.4596
+f1_score improved from 0.333133 to 0.388388
+lb improved from 0.771552 to 0.800585
+Using WeightedRandomSampler
+=>pad_5:0.8170,   pad_3:0.7670,   acc:0.4864
+f1_score improved from 0.388388 to 0.411150
+lb improved from 0.800585 to 0.817009
+Using WeightedRandomSampler
+=>pad_5:0.8240,   pad_3:0.7756,   acc:0.5016
+f1_score improved from 0.411150 to 0.430402
+lb improved from 0.817009 to 0.823985
+Using WeightedRandomSampler
+=>pad_5:0.8341,   pad_3:0.7884,   acc:0.5233
+f1_score improved from 0.430402 to 0.448932
+lb improved from 0.823985 to 0.834104
+Using WeightedRandomSampler
+=>pad_5:0.8384,   pad_3:0.7939,   acc:0.5361
+f1_score improved from 0.448932 to 0.472750
+lb improved from 0.834104 to 0.838363
+Using WeightedRandomSampler
+=>pad_5:0.8412,   pad_3:0.7970,   acc:0.5377
+f1_score improved from 0.472750 to 0.486446
+lb improved from 0.838363 to 0.841161
+Using WeightedRandomSampler
+=>pad_5:0.8447,   pad_3:0.8014,   acc:0.5453
+f1_score 0.486446 current 0.484364
+lb improved from 0.841161 to 0.844703
+Using WeightedRandomSampler
+=>pad_5:0.8497,   pad_3:0.8077,   acc:0.5585
+f1_score improved from 0.486446 to 0.495783
+lb improved from 0.844703 to 0.849695
+Using WeightedRandomSampler
+=>pad_5:0.8520,   pad_3:0.8108,   acc:0.5645
+f1_score improved from 0.495783 to 0.503722
+lb improved from 0.849695 to 0.852009
+Using WeightedRandomSampler
+=>pad_5:0.8565,   pad_3:0.8164,   acc:0.5761
+f1_score improved from 0.503722 to 0.517142
+lb improved from 0.852009 to 0.856500
+Using WeightedRandomSampler
+=>pad_5:0.8561,   pad_3:0.8155,   acc:0.5680
+f1_score 0.517142 current 0.513567
+lb 0.856500 current 0.856126
+Using WeightedRandomSampler
+=>pad_5:0.8580,   pad_3:0.8177,   acc:0.5731
+f1_score improved from 0.517142 to 0.518698
+lb improved from 0.856500 to 0.857963
+Using WeightedRandomSampler
+=>pad_5:0.8581,   pad_3:0.8179,   acc:0.5710
+f1_score 0.518698 current 0.510515
+lb improved from 0.857963 to 0.858148
+Using WeightedRandomSampler
+=>pad_5:0.8617,   pad_3:0.8223,   acc:0.5813
+f1_score improved from 0.518698 to 0.521049
+lb improved from 0.858148 to 0.861724
+Using WeightedRandomSampler
+=>pad_5:0.8617,   pad_3:0.8225,   acc:0.5814
+f1_score improved from 0.521049 to 0.524286
+lb improved from 0.861724 to 0.861737
+Using WeightedRandomSampler
+=>pad_5:0.8618,   pad_3:0.8227,   acc:0.5840
+f1_score 0.524286 current 0.518438
+lb improved from 0.861737 to 0.861777
+Using WeightedRandomSampler
+=>pad_5:0.8623,   pad_3:0.8232,   acc:0.5839
+f1_score 0.524286 current 0.519065
+lb improved from 0.861777 to 0.862257
+Using WeightedRandomSampler
+=>pad_5:0.8618,   pad_3:0.8227,   acc:0.5823
+f1_score 0.524286 current 0.521583
+lb 0.862257 current 0.861826
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 2048, 'hop_size': 512, 'fmin': 0, 'fmax': 16000, 'mel_bins': 256, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 2
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7f77905b89d0>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v4.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v4', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of mel_spec.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of mel_spec.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of wav2img.0.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of wav2img.0.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18372 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.7135,   pad_3:0.6441,   acc:0.3073
+f1_score improved from 0.000000 to 0.220677
+lb improved from 0.000000 to 0.713513
+Using WeightedRandomSampler
+=>pad_5:0.7764,   pad_3:0.7191,   acc:0.4229
+f1_score improved from 0.220677 to 0.334077
+lb improved from 0.713513 to 0.776358
+Using WeightedRandomSampler
+=>pad_5:0.7982,   pad_3:0.7457,   acc:0.4625
+f1_score improved from 0.334077 to 0.395108
+lb improved from 0.776358 to 0.798208
+Using WeightedRandomSampler
+=>pad_5:0.8207,   pad_3:0.7732,   acc:0.5082
+f1_score improved from 0.395108 to 0.427094
+lb improved from 0.798208 to 0.820688
+Using WeightedRandomSampler
+=>pad_5:0.8232,   pad_3:0.7759,   acc:0.5098
+f1_score improved from 0.427094 to 0.433272
+lb improved from 0.820688 to 0.823224
+Using WeightedRandomSampler
+=>pad_5:0.8345,   pad_3:0.7888,   acc:0.5294
+f1_score improved from 0.433272 to 0.469995
+lb improved from 0.823224 to 0.834504
+Using WeightedRandomSampler
+=>pad_5:0.8430,   pad_3:0.7998,   acc:0.5479
+f1_score improved from 0.469995 to 0.481468
+lb improved from 0.834504 to 0.843046
+Using WeightedRandomSampler
+=>pad_5:0.8489,   pad_3:0.8069,   acc:0.5623
+f1_score improved from 0.481468 to 0.490123
+lb improved from 0.843046 to 0.848918
+Using WeightedRandomSampler
+=>pad_5:0.8521,   pad_3:0.8110,   acc:0.5711
+f1_score improved from 0.490123 to 0.499954
+lb improved from 0.848918 to 0.852075
+Using WeightedRandomSampler
+=>pad_5:0.8517,   pad_3:0.8100,   acc:0.5611
+f1_score 0.499954 current 0.495929
+lb 0.852075 current 0.851744
+Using WeightedRandomSampler
+=>pad_5:0.8540,   pad_3:0.8129,   acc:0.5720
+f1_score improved from 0.499954 to 0.506483
+lb improved from 0.852075 to 0.853953
+Using WeightedRandomSampler
+=>pad_5:0.8600,   pad_3:0.8211,   acc:0.5908
+f1_score improved from 0.506483 to 0.525721
+lb improved from 0.853953 to 0.859982
+Using WeightedRandomSampler
+=>pad_5:0.8607,   pad_3:0.8217,   acc:0.5902
+f1_score 0.525721 current 0.521312
+lb improved from 0.859982 to 0.860652
+Using WeightedRandomSampler
+=>pad_5:0.8613,   pad_3:0.8223,   acc:0.5873
+f1_score improved from 0.525721 to 0.526942
+lb improved from 0.860652 to 0.861310
+Using WeightedRandomSampler
+=>pad_5:0.8627,   pad_3:0.8239,   acc:0.5875
+f1_score 0.526942 current 0.523900
+lb improved from 0.861310 to 0.862695
+Using WeightedRandomSampler
+=>pad_5:0.8642,   pad_3:0.8257,   acc:0.5913
+f1_score improved from 0.526942 to 0.531577
+lb improved from 0.862695 to 0.864234
+Using WeightedRandomSampler
+=>pad_5:0.8667,   pad_3:0.8290,   acc:0.6002
+f1_score improved from 0.531577 to 0.542437
+lb improved from 0.864234 to 0.866715
+Using WeightedRandomSampler
+=>pad_5:0.8665,   pad_3:0.8286,   acc:0.5977
+f1_score 0.542437 current 0.540887
+lb 0.866715 current 0.866497
+Using WeightedRandomSampler
+=>pad_5:0.8667,   pad_3:0.8289,   acc:0.5979
+f1_score 0.542437 current 0.533600
+lb 0.866715 current 0.866677
+Using WeightedRandomSampler
+=>pad_5:0.8662,   pad_3:0.8283,   acc:0.5974
+f1_score 0.542437 current 0.535770
+lb 0.866715 current 0.866186
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 2048, 'hop_size': 512, 'fmin': 0, 'fmax': 16000, 'mel_bins': 256, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 3
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7fefa05d8a30>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v4.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v4', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of mel_spec.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of mel_spec.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of wav2img.0.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of wav2img.0.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18448 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.7182,   pad_3:0.6488,   acc:0.2964
+f1_score improved from 0.000000 to 0.205202
+lb improved from 0.000000 to 0.718246
+Using WeightedRandomSampler
+=>pad_5:0.7826,   pad_3:0.7269,   acc:0.4253
+f1_score improved from 0.205202 to 0.337746
+lb improved from 0.718246 to 0.782623
+Using WeightedRandomSampler
+=>pad_5:0.8120,   pad_3:0.7620,   acc:0.4759
+f1_score improved from 0.337746 to 0.393777
+lb improved from 0.782623 to 0.811957
+Using WeightedRandomSampler
+=>pad_5:0.8199,   pad_3:0.7720,   acc:0.4936
+f1_score improved from 0.393777 to 0.425354
+lb improved from 0.811957 to 0.819946
+Using WeightedRandomSampler
+=>pad_5:0.8322,   pad_3:0.7880,   acc:0.5244
+f1_score improved from 0.425354 to 0.441620
+lb improved from 0.819946 to 0.832248
+Using WeightedRandomSampler
+=>pad_5:0.8364,   pad_3:0.7927,   acc:0.5312
+f1_score improved from 0.441620 to 0.462894
+lb improved from 0.832248 to 0.836409
+Using WeightedRandomSampler
+=>pad_5:0.8400,   pad_3:0.7974,   acc:0.5368
+f1_score improved from 0.462894 to 0.462910
+lb improved from 0.836409 to 0.840037
+Using WeightedRandomSampler
+=>pad_5:0.8441,   pad_3:0.8013,   acc:0.5392
+f1_score improved from 0.462910 to 0.470850
+lb improved from 0.840037 to 0.844096
+Using WeightedRandomSampler
+=>pad_5:0.8535,   pad_3:0.8129,   acc:0.5627
+f1_score improved from 0.470850 to 0.497923
+lb improved from 0.844096 to 0.853497
+Using WeightedRandomSampler
+=>pad_5:0.8558,   pad_3:0.8161,   acc:0.5660
+f1_score improved from 0.497923 to 0.504879
+lb improved from 0.853497 to 0.855836
+Using WeightedRandomSampler
+=>pad_5:0.8562,   pad_3:0.8158,   acc:0.5604
+f1_score 0.504879 current 0.493389
+lb improved from 0.855836 to 0.856157
+Using WeightedRandomSampler
+=>pad_5:0.8551,   pad_3:0.8159,   acc:0.5727
+f1_score 0.504879 current 0.499869
+lb 0.856157 current 0.855141
+Using WeightedRandomSampler
+=>pad_5:0.8623,   pad_3:0.8246,   acc:0.5860
+f1_score improved from 0.504879 to 0.507433
+lb improved from 0.856157 to 0.862345
+Using WeightedRandomSampler
+=>pad_5:0.8616,   pad_3:0.8232,   acc:0.5796
+f1_score improved from 0.507433 to 0.511777
+lb 0.862345 current 0.861589
+Using WeightedRandomSampler
+=>pad_5:0.8652,   pad_3:0.8276,   acc:0.5889
+f1_score improved from 0.511777 to 0.527306
+lb improved from 0.862345 to 0.865242
+Using WeightedRandomSampler
+=>pad_5:0.8633,   pad_3:0.8249,   acc:0.5808
+f1_score 0.527306 current 0.512227
+lb 0.865242 current 0.863260
+Using WeightedRandomSampler
+=>pad_5:0.8641,   pad_3:0.8260,   acc:0.5816
+f1_score 0.527306 current 0.517253
+lb 0.865242 current 0.864132
+Using WeightedRandomSampler
+=>pad_5:0.8640,   pad_3:0.8256,   acc:0.5800
+f1_score 0.527306 current 0.521645
+lb 0.865242 current 0.864016
+Using WeightedRandomSampler
+=>pad_5:0.8655,   pad_3:0.8278,   acc:0.5855
+f1_score 0.527306 current 0.518705
+lb improved from 0.865242 to 0.865517
+Using WeightedRandomSampler
+=>pad_5:0.8667,   pad_3:0.8293,   acc:0.5879
+f1_score 0.527306 current 0.522593
+lb improved from 0.865517 to 0.866735
+{'network': 'TimmClassifier_v3', 'encoder_params': {'encoder': 'tf_efficientnet_b0', 'duration': 15, 'val_duration': 5, 'classes': 264, 'backbone_params': {'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}, 'mel_config': {'sample_rate': 32000, 'window_size': 2048, 'hop_size': 512, 'fmin': 0, 'fmax': 16000, 'mel_bins': 256, 'power': 2, 'top_db': None}}, 'train_transforms': 'set_2', 'multiplier': 1, 'optimizer': {'train_bs': 16, 'val_bs': 16, 'type': 'AdamW', 'learning_rate': 0.0007, 'weight_decay': 0.01, 'schedule': {'type': 'cosine', 'mode': 'step', 'epochs': 20, 'params': {'eta_min': 1e-05}}, 'batch_size': 32, 'momentum': 0.9, 'clip': 1.0, 'classifier_lr': -1, 'nesterov': True}, 'losses': [{'name': 'BCEW', 'type': 'BCEBirdLossCalculator', 'weight': 1, 'display': True}], 'encoder': 'dpn92', 'model_params': {}, 'normalize': {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}}
+
+    creating dataset for fold 4
+    transforms                set_2
+    train_period              15
+    infer_period              5 
+    
+Number of primary labels  264
+mode train - augmentation is active <audiomentations.core.composition.Compose object at 0x7fadaebf09a0>
+Number of primary labels  264
+TrainConfiguration(config_path='configs/cls_ef_v4.json', gpu='0', distributed=False, from_zero=True, zero_score=False, local_rank=0, freeze_epochs=0, test_every=1, world_size=1, output_dir='weights/', prefix='ef0_v4', resume_checkpoint='weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20', workers=8, log_dir='logs', fp16=False, freeze_bn=False, mixup_prob=0.5)
+initing CLS features model 15 duration...
+{'in_chans': 1, 'drop_path_rate': 0.2, 'drop_rate': 0.5}
+pretrained model...
+=> loading checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20'
+dict_keys(['epoch', 'state_dict', 'metrics'])
+SKIPPING!!! Shape of mel_spec.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of mel_spec.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of wav2img.0.spectrogram.window changed from torch.Size([1024]) to torch.Size([2048])
+SKIPPING!!! Shape of wav2img.0.mel_scale.fb changed from torch.Size([513, 128]) to torch.Size([1025, 256])
+SKIPPING!!! Shape of head1.weight changed from torch.Size([747, 320]) to torch.Size([264, 320])
+SKIPPING!!! Shape of head1.bias changed from torch.Size([747]) to torch.Size([264])
+=> loaded checkpoint 'weights/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20' (epoch 19)
+init loss BCEBirdLoss...
+param_groups 2
+Cosine decay with T_max:18398 eta_min:1e-05
+Using WeightedRandomSampler
+=>pad_5:0.7182,   pad_3:0.6485,   acc:0.3130
+f1_score improved from 0.000000 to 0.206023
+lb improved from 0.000000 to 0.718226
+Using WeightedRandomSampler
+=>pad_5:0.7753,   pad_3:0.7161,   acc:0.4127
+f1_score improved from 0.206023 to 0.331279
+lb improved from 0.718226 to 0.775327
+Using WeightedRandomSampler
+=>pad_5:0.8097,   pad_3:0.7572,   acc:0.4750
+f1_score improved from 0.331279 to 0.380369
+lb improved from 0.775327 to 0.809689
+Using WeightedRandomSampler
+=>pad_5:0.8194,   pad_3:0.7701,   acc:0.5023
+f1_score improved from 0.380369 to 0.423839
+lb improved from 0.809689 to 0.819421
+Using WeightedRandomSampler
+=>pad_5:0.8220,   pad_3:0.7745,   acc:0.5168
+f1_score improved from 0.423839 to 0.452058
+lb improved from 0.819421 to 0.821970
+Using WeightedRandomSampler

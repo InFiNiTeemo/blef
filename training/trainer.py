@@ -131,7 +131,7 @@ class PytorchTrainer(ABC):
             # for pretrain save per 10 epoch
             if (self.current_epoch + 1) % 10 == 0:
                 if self.train_config.local_rank == 0:
-                    self._save_best({f"_e{self.current_epoch+1}": 0})
+                    self._save_best({f"e{self.current_epoch+1}": 0})
 
     def _save_last(self):
         self.model = self.model.eval()

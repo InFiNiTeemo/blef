@@ -139,12 +139,12 @@ class BirdDataset(Dataset):
         ## labels
         labels = torch.zeros((self.n_classes,))
         labels[self.bird2id[row['primary_label']]] = 1.0
-        for x in ast.literal_eval(row['secondary_labels']):
-            try:
-                labels[self.bird2id[x]] = 1.0
-            except:
-                ## if not in 21 classes, ignore
-                continue
+        # for x in ast.literal_eval(row['secondary_labels']):
+        #     try:
+        #         labels[self.bird2id[x]] = 1.0
+        #     except:
+        #         ## if not in 21 classes, ignore
+        #         continue
 
         ## weight
         weight = torch.tensor(row['weight'])

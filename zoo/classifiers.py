@@ -8,8 +8,10 @@ from torch import nn
 from torch.nn import functional as F
 from torch.nn.parameter import Parameter
 from nnAudio.Spectrogram import STFT
+from torch.distributions import Beta
 
 import torchaudio as ta
+import numpy as np
 
 from zoo.oned import OneDConvNet
 
@@ -42,6 +44,37 @@ def init_weights(model):
     elif classname.find("Linear") != -1:
         model.weight.data.normal_(0, 0.01)
         model.bias.data.zero_()
+
+
+
+class Mixup(nn.Module):
+    def __init__(self, mix_beta):
+
+        super(Mixup, self).__init__()
+        self.beta_distribution = Beta(mix_beta, mix_beta)
+
+    def forward(self, X, Y, weight=None):
+
+        bs = X.shape[0]
+        n_dims = len(X.shape)
+        perm = torch.randperm(bs)
+        coeffs = self.beta_distribution.rsample(torch.Size((bs,))).to(X.device)
+
+        if n_dims == 2:
+            X = coeffs.view(-1, 1) * X + (1 - coeffs.view(-1, 1)) * X[perm]
+        elif n_dims == 3:
+            X = coeffs.view(-1, 1, 1) * X + (1 - coeffs.view(-1, 1, 1)) * X[perm]
+        else:
+            X = coeffs.view(-1, 1, 1, 1) * X + (1 - coeffs.view(-1, 1, 1, 1)) * X[perm]
+
+        Y = coeffs.view(-1, 1) * Y + (1 - coeffs.view(-1, 1)) * Y[perm]
+
+        if weight is None:
+            return X, Y
+        else:
+            weight = coeffs.view(-1) * weight + (1 - coeffs.view(-1)) * weight[perm]
+            return X, Y, weight
+
 
 
 def interpolate(x: torch.Tensor, ratio: int):
@@ -615,13 +648,10 @@ class TimmClassifier_v3(nn.Module):
 
     ## TODO: optional normalization of mel
     def forward(self, x, is_test=False):
-        if is_test == False:
-            x = x[:, 0, :]  # bs, ch, time -> bs, time
+        x = x[:, 0, :]  # bs, ch, time -> bs, time 这里的time应该值得是dsr
+        if not is_test:  # train
             bs, time = x.shape
             x = x.reshape(bs * self.factor, time // self.factor)
-        else:
-            ## only 5 seconds infer...
-            x = x[:, 0, :]  # bs, ch, time -> bs, time
 
         with torch.cuda.amp.autocast(enabled=False):
             x = self.wav2img(x)  # bs, ch, mel, time
@@ -631,8 +661,9 @@ class TimmClassifier_v3(nn.Module):
             x = self.freq_mask(x)
             x = self.time_mask(x)
 
-        x = x.permute(0, 2, 1)
-        x = x[:, None, :, :]
+        x = x.permute(0, 2, 1)  # b, time, mel
+        x = x[:, None, :, :]  # b, c, time, mel
+
 
         ## TODO: better loop
         xss = []
@@ -640,7 +671,7 @@ class TimmClassifier_v3(nn.Module):
             if self.training:
                 b, c, t, f = x.shape
                 x = x.permute(0, 2, 1, 3)
-                x = x.reshape(b // self.factor, self.factor * t, c, f)
+                x = x.reshape(b // self.factor, self.factor * t, c, f)  # (bs * parts, time // parts, 1, mel)
                 x = x.permute(0, 2, 1, 3)
 
             x = self.gem(x)
