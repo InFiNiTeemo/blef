@@ -4,7 +4,7 @@
     "encoder": "tf_efficientnetv2_s_in21k",
     "duration": 15,
     "val_duration": 5,
-    "classes": 488,
+    "classes": 264,
     "backbone_params": {
       "in_chans": 1,
       "drop_path_rate": 0.2,

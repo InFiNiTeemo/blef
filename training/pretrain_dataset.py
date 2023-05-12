@@ -26,8 +26,9 @@ class PretrainDataset(Dataset):
             ["primary_label", "secondary_labels", "filename"]]
         df2021["data_year"] = 2021
         df2022["data_year"] = 2022
-        df2023["data_year"] = 2023
-        df = pd.concat([df2021, df2022, df2023], ignore_index=True)
+        df = pd.concat([df2021, df2022], ignore_index=True)
+        ##df2023["data_year"] = 2023
+        # df = pd.concat([df2021, df2022, df2023], ignore_index=True)
 
         print(len(df))
         df = df[~df.primary_label.isin(ignore_labels)]
