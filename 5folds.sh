@@ -79,10 +79,7 @@
 
 
 
-# 5.12
-# sh train_pretrain.sh 1 0 pre_ef1 0 /kaggle/input
 
-# sh train_pretrain.sh 1 0 pre_ef 0 /kaggle/input
 
 
 # e40 bad
@@ -92,14 +89,44 @@
 
 ## ** ef2 ** ##
 # no 2023 data pretrain
-# 61.17, 56.07, 88.2
+# no pretrain
+# 61.17, 56.07, 88.2 -> 0.79
 # sh train_single.sh 0 ./outs cls_ef2_v0 0 /kaggle/input pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+# pretrain
+# 62.8  56.04 88.84 -> 0.80
+#sh train_single.sh 0 ./outs cls_ef2_v0 0 /kaggle/input ef2_v0 pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+
+
+
+# set3
+# 63.4 57.7 88.96
+sh train_single.sh 0 ./outs cls_ef2_v1 0 /kaggle/input ef2_v1 pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+
+# set4
+sh train_single.sh 0 ./outs cls_ef2_v2 0 /kaggle/input ef2_v2 pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+
+# todo 还是要用v0来做实验
+# sh train_pretrain.sh 1 0 pre_ef 0 /kaggle/input
+# try 30 epoch 首先根据上面最好
+# sh train_single.sh 0 ./outs cls_ef2_v4 0 /kaggle/input ef2_v4 pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+# 试试bs32和bs64
+# sh train_single.sh 0 ./outs cls_ef2_v3 0 /kaggle/input ef2_v3 pretrain_TimmClassifier_v3_tf_efficientnetv2_s_in21k_0_e20
+# other label to be 0.5
+# try different loss
+# try 5 for train 5 for val
+
 
 
 
 
 # python
 # python utils/kaggle/submission_time.py
+
+# pretrain
+# sh train_pretrain.sh 1 0 pre_ef1 0 /kaggle/input
+# sh train_pretrain.sh 1 0 pre_ef 0 /kaggle/input
+
+# 5.12 todo
 
 
 

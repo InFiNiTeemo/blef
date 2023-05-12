@@ -19,8 +19,6 @@ PYTHONPATH=.  python -u -m torch.distributed.launch  --nproc_per_node=$NUM_GPUS 
 # sh train_pretrain.sh 1 0 pre_nf0 0 /kaggle/input
 
 
-
-
 #sh train_pretrain.sh 1 0 cls 0 /kaggle/input
 
 # ef

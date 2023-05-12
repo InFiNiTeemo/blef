@@ -1,7 +1,7 @@
 import os
 import warnings
 
-from training.pretrain_dataset import PretrainDataset
+from training.pretrain_dataset import PretrainDataset2023
 
 os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
@@ -72,8 +72,8 @@ def parse_args():
 
 def create_data_datasets(args):
     print(f"creating dataset for fold {args.fold}")
-    train_dataset = PretrainDataset(dataset_dir=args.data_dir)
-    val_dataset = PretrainDataset(dataset_dir=args.data_dir)
+    train_dataset = PretrainDataset2023(dataset_dir=args.data_dir)
+    val_dataset = PretrainDataset2023(dataset_dir=args.data_dir)
     return train_dataset, val_dataset
 
 
