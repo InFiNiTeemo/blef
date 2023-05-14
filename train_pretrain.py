@@ -59,6 +59,7 @@ def parse_args():
     arg('--fp16', action='store_true', default=False)
     arg('--distributed', action='store_true', default=False)
     arg("--local_rank", default=0, type=int)
+    arg("--save_epochs", default=5, type=int)
     arg("--world-size", default=1, type=int)
     arg("--test_every", type=int, default=1)
     arg('--freeze-epochs', type=int, default=0)
@@ -95,7 +96,8 @@ def main():
         from_zero=args.from_zero,
         zero_score=args.zero_score,
         fp16=args.fp16,
-        freeze_bn=args.freeze_bn
+        freeze_bn=args.freeze_bn,
+        save_epochs=args.save_epochs
     )
 
     data_train, data_val = create_data_datasets(args)

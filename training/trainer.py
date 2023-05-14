@@ -49,6 +49,7 @@ class TrainConfiguration:
     fp16: bool = True
     freeze_bn: bool = False
     mixup_prob: float = 0.0
+    save_epochs: int = 10
 
 
 class Evaluator(ABC):
@@ -129,7 +130,7 @@ class PytorchTrainer(ABC):
                         self.summary_writer.add_scalar('val/{}'.format(k), float(v), global_step=self.current_epoch)
 
             # for pretrain save per 10 epoch
-            if (self.current_epoch + 1) % 10 == 0:
+            if (self.current_epoch + 1) % self.train_config.save_epochs == 0:
                 if self.train_config.local_rank == 0:
                     self._save_best({f"e{self.current_epoch+1}": 0})
 

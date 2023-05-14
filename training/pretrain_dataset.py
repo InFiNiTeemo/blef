@@ -96,7 +96,7 @@ class PretrainDataset2023(Dataset):
             self,
             dataset_dir: str,
     ):
-        ignore_labels = (target_columns)
+        ignore_labels = []  # (target_columns)
         df2021 = pd.read_csv(os.path.join(dataset_dir, "birdclef-2021/train_metadata.csv"))[
             ["primary_label", "secondary_labels", "filename"]]
         df2022 = pd.read_csv(os.path.join(dataset_dir, "birdclef-2022/train_metadata.csv"))[
