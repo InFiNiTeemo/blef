@@ -559,7 +559,7 @@ class TimmClassifier_v1(nn.Module):
         if is_test == False:
             x = x[:, 0, :]  # bs, ch, time -> bs, time
             bs, time = x.shape
-            x = x.reshape(bs * self.factor, time // self.factor)
+            x = x.reshape(bs * self.factor, time // self.factor) # 5
         else:
             ## only 5 seconds infer...
             x = x[:, 0, :]  # bs, ch, time -> bs, time
@@ -651,7 +651,7 @@ class TimmClassifier_v3(nn.Module):
         x = x[:, 0, :]  # bs, ch, time -> bs, time 这里的time应该值得是dsr
         if not is_test:  # train
             bs, time = x.shape
-            x = x.reshape(bs * self.factor, time // self.factor)
+            x = x.reshape(bs * self.factor, time // self.factor) # 使之为5分钟的片段 -> (b*fractor, 5 * sr)
 
         with torch.cuda.amp.autocast(enabled=False):
             x = self.wav2img(x)  # bs, ch, mel, time
@@ -667,19 +667,124 @@ class TimmClassifier_v3(nn.Module):
 
         ## TODO: better loop
         xss = []
-        for x in self.encoder(x):
+        for x in self.encoder(x):  # 经过encoder以后channel会变大，
             if self.training:
                 b, c, t, f = x.shape
                 x = x.permute(0, 2, 1, 3)
                 x = x.reshape(b // self.factor, self.factor * t, c, f)  # (bs * parts, time // parts, 1, mel)
-                x = x.permute(0, 2, 1, 3)
+                x = x.permute(0, 2, 1, 3)   #
 
-            x = self.gem(x)
+            x = self.gem(x)  # 将两维压缩
             x = x[:, :, 0, 0]
             xss.append(x)
 
         logit = self.head1(xss[0])
         return {"logit": logit}
+
+
+
+class SedClassifier(nn.Module):
+    def __init__(self, encoder: str,
+                 classes=21,
+                 enable_masking=False,
+                 **kwargs
+                 ):
+        super().__init__()
+
+        print(f"initing CLS features model {kwargs['duration']} duration...")
+
+        mel_config = kwargs['mel_config']
+        self.mel_spec = ta.transforms.MelSpectrogram(
+            sample_rate=mel_config['sample_rate'],
+            n_fft=mel_config['window_size'],
+            win_length=mel_config['window_size'],
+            hop_length=mel_config['hop_size'],
+            f_min=mel_config['fmin'],
+            f_max=mel_config['fmax'],
+            pad=0,
+            n_mels=mel_config['mel_bins'],
+            power=mel_config['power'],
+            normalized=False,
+        )
+
+        self.amplitude_to_db = ta.transforms.AmplitudeToDB(top_db=mel_config['top_db'])
+        self.wav2img = torch.nn.Sequential(self.mel_spec, self.amplitude_to_db)
+        self.enable_masking = enable_masking
+        if enable_masking:
+            self.freq_mask = ta.transforms.FrequencyMasking(24, iid_masks=True)
+            self.time_mask = ta.transforms.TimeMasking(64, iid_masks=True)
+
+        ## fix https://github.com/rwightman/pytorch-image-models/issues/488#issuecomment-796322390
+
+        print(kwargs['backbone_params'])
+
+        pretrained = kwargs.get("pretrained", True)
+        if pretrained:
+            print("pretrained model...")
+
+        self.bn0 = nn.BatchNorm2d(mel_config['mel_bins'])
+
+        base_model = timm.create_model(
+            encoder, pretrained=pretrained,
+            # 金字塔结构的feature reducetion
+            features_only=True, out_indices=([4]),  # index 0 is the stride 2 features, and index 4 is stride 32.
+            **kwargs['backbone_params']
+        )
+
+        self.encoder = base_model
+
+        in_features = base_model.feature_info[-1]["num_chs"]
+        self.head1 = nn.Linear(in_features, in_features, bias=True)
+        self.att_block = AttBlockV2(
+            in_features, classes, activation="linear")
+
+    def init_weight(self):
+        init_bn(self.bn0)
+        init_layer(self.fc1)
+
+    ## TODO: optional normalization of mel
+    def forward(self, x, is_test=False):
+        x = x[:, 0, :]  # bs, ch, time -> bs, time 这里的time应该值得是dsr
+
+        with torch.cuda.amp.autocast(enabled=False):
+            x = self.wav2img(x)  # bs, ch, mel, time
+            x = (x + 80) / 80
+
+        if self.training and self.enable_masking:
+            x = self.freq_mask(x)
+            x = self.time_mask(x)
+
+        x = x.permute(0, 2, 1)  # b, time, mel
+        x = x[:, None, :, :]  # b, c, time, mel
+
+        x = x.transpose(1, 3)  # time, c, b, mel
+        x = self.bn0(x)       # 对 0, 2, 3 维度上做bn
+        x = x.transpose(1, 3)
+
+
+        ## TODO: better loop
+        x = self.encoder(x)[0] # 维度保持不变， c增加, b, mel减少
+            # if self.training:
+            #     b, c, t, f = x.shape
+            #     x = x.permute(0, 2, 1, 3)
+            #     x = x.reshape(b // self.factor, self.factor * t, c, f)  # (bs * parts, time // parts, 1, mel)
+            #     x = x.permute(0, 2, 1, 3)
+
+        # Aggregate in frequency axis
+        x = torch.mean(x, dim=2)
+
+        x1 = F.max_pool1d(x, kernel_size=3, stride=1, padding=1)
+        x2 = F.avg_pool1d(x, kernel_size=3, stride=1, padding=1)
+        x = x1 + x2
+
+        x = x.transpose(1, 2)
+        x = F.relu_(self.head1(x))
+        x = x.transpose(1, 2)
+
+        clipwise_output, norm_att, segmentwise_output = self.att_block(x)
+
+
+        return {"logit": clipwise_output}
 
 
 class TimmClassifier(nn.Module):

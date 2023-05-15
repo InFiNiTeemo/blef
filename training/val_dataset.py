@@ -159,7 +159,7 @@ class BirdDataset(Dataset):
         return len(self.df)
 
 
-class BirdDataset_img(Dataset):
+class BirdSEDDataset(Dataset):
     def __init__(
             self,
             mode: str,
@@ -237,37 +237,30 @@ class BirdDataset_img(Dataset):
                 return self.getitem(random.randint(0, len(self) - 1))
         raise Exception("OOPS, something is wrong!!!")
 
-    @staticmethod
-    def normalize(image):
-        image = image / 255.0
-        # image = torch.stack([image, image, image])
-        return image
-
     def getitem(self, i):
         row = self.df.iloc[i]
-        data_year = row['data_year']
-        filename = os.path.join(self.dataset_dir, f"birdclef-{int(data_year)}",
-                                "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio",
-                                row['filename']).replace(".ogg", f"_{self.duration}.npy")
-
-        image = np.load(filename)
-
-        ########## RANDOM SAMPLING ################
-        if self.mode == "train":
-            image = image[np.random.choice(len(image))]
+        if 'pretrain' in self.folds_csv:
+            filename = os.path.join(self.dataset_dir, f"{row['filename'].split('.')[0]}.ogg")
+            if not os.path.exists(filename):
+                filename = filename.replace(".ogg", ".wav")
         else:
-            image = image[0]
+            if 'only_ml' in self.folds_csv:
+                filename = os.path.join(self.dataset_dir, 'shared', row['filename'])
+            elif 'pseudo' in self.folds_csv:
+                filename = os.path.join(self.dataset_dir, 'shared', row['filename'])
+            else:
+                data_year = row['data_year']
+                filename = os.path.join(self.dataset_dir, f"birdclef-{int(data_year)}",
+                                        "train_audio" if data_year == 2022 or data_year == 2023 else "train_short_audio",
+                                        row['filename'])
 
-        #####################################################################
+        ## wav
+        if self.mode == "train":
+            self.duration = None
 
-        image = torch.tensor(image).float()
-        ## todo self.aug
-
-
-
-        image = torch.stack([image, image, image])
-        image = self.normalize(image)
-
+        wav = self.load_one(filename, offset=0, duration=self.duration)
+        if wav.shape[0] < (self.dsr): wav = np.pad(wav, (0, self.dsr - wav.shape[0]))  # 在末尾pad, 0表示开头pad 0个元素
+        if self.transforms: wav = self.transforms(wav, self.sr)
 
         ## labels
         labels = torch.zeros((self.n_classes,))
@@ -283,7 +276,7 @@ class BirdDataset_img(Dataset):
         weight = torch.tensor(row['weight'])
 
         return {
-            "img": image,
+            "wav": torch.tensor(wav).unsqueeze(0),
             "labels": labels,
             "weight": weight
         }

@@ -131,11 +131,11 @@
 
 
 
-# * pretrain on 2021 - 20223 *#
+# * pretrain on 2021 - 2023 *#
 # sh train_pretrain.sh 1 0 pre_ef_v2 0 /kaggle/input
 
 # epoch 4
-# 57.9  49.8 86.7
+# 57.9  49.8 86.7 -> 0.79
 #=>pad_5:0.8935,   pad_3:0.8622,   acc:0.6394
 #f1_score 0.577020 current 0.570575
 #lb 0.895047 current 0.893483
@@ -149,8 +149,12 @@
 #=>pad_5:0.8973,   pad_3:0.8667,   acc:0.6418
 #f1_score 0.578156 current 0.568083
 #lb improved from 0.897161 to 0.897270
+# sh train_single.sh 0 ./outs cls_ef_v6 0 /kaggle/input ef_v6_e20 pretrain_TimmClassifier_v3_tf_efficientnet_b0_0_e20
 
-sh train_single.sh 0 ./outs cls_ef_v6 0 /kaggle/input ef_v6_e20 pretrain_TimmClassifier_v3_tf_efficientnet_b0_0_e20
+
+# * sed * #
+sh train_single.sh 0 ./outs sed_ef_v0 0 /kaggle/input sed_v0
+
 
 
 # python
@@ -162,8 +166,8 @@ sh train_single.sh 0 ./outs cls_ef_v6 0 /kaggle/input ef_v6_e20 pretrain_TimmCla
 
 
 
+
 # current best 63.9 57.9 89.6
-# 5.12 todo
 
 
 
