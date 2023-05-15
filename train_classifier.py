@@ -38,15 +38,19 @@ from training.trainer import Evaluator, PytorchTrainer, TrainConfiguration
 
 
 class BirdEvaluator(Evaluator):
-    def __init__(self, args) -> None:
+    def __init__(self, args, train_full=True) -> None:
         super().__init__()
         self.args = args
+        self.train_full = train_full
 
     def init_metrics(self) -> Dict:
         return {"f1_score": 0, "lb": 0.}
 
     def validate(self, dataloader: DataLoader, model: torch.nn.Module, distributed: bool = False, local_rank: int = 0,
                  snapshot_name: str = "") -> Dict:
+        if self.train_full:
+            return self.init_metrics()
+
         conf_name = os.path.splitext(os.path.basename(self.args.config))[0]
         val_dir = os.path.join(self.args.val_dir, conf_name, str(self.args.fold))
         os.makedirs(val_dir, exist_ok=True)
@@ -84,6 +88,7 @@ class BirdEvaluator(Evaluator):
             gts = np.concatenate(gts, axis=0)
             preds = np.concatenate(preds, axis=0)
             #for threshold in np.arange(0.1, 0.9, 0.05):
+
             acc = average_precision_score(
                 gts,
                 preds,
@@ -157,6 +162,7 @@ def create_data_datasets(args):
     transforms                {conf.get("train_transforms")}
     train_period              {train_period}
     infer_period              {infer_period} 
+    2nd_weight                {conf.get("secondary_weight")}
     """)
 
     train_transforms = zoo_transforms.__dict__[conf.get("train_transforms")]
@@ -164,9 +170,11 @@ def create_data_datasets(args):
     ## set 1 csv
     train_dataset = BirdDataset(mode="train", folds_csv=args.folds_csv, dataset_dir=args.data_dir, fold=args.fold,
                                 multiplier=conf.get("multiplier", 1), duration=train_period, transforms=train_transforms,
-                                n_classes=conf['encoder_params']['classes'])
+                                n_classes=conf['encoder_params']['classes'],
+                                secondary_weight=conf.get("secondary_weight", 1),)
     val_dataset = BirdDataset(mode="val", folds_csv=args.folds_csv, dataset_dir=args.data_dir, fold=args.fold, duration=infer_period,
-                              n_classes=conf['encoder_params']['classes'])
+                              n_classes=conf['encoder_params']['classes'],
+                              secondary_weight=conf.get("secondary_weight", 1),)
     return train_dataset, val_dataset
 
 
@@ -195,7 +203,7 @@ def main():
     )
 
     data_train, data_val = create_data_datasets(args)
-    birds_evaluator = BirdEvaluator(args)
+    birds_evaluator = BirdEvaluator(args, args.fold not in [0, 1, 2, 3, 4])
     trainer = PytorchTrainer(train_config=trainer_config, evaluator=birds_evaluator, fold=args.fold,
                              train_data=data_train, val_data=data_val)
 

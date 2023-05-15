@@ -41,6 +41,7 @@ class BirdDataset(Dataset):
             multiplier: int = 1,
             duration: int = 30,
             val_duration: int = 5,
+            secondary_weight: float = 1,
     ):
         ## many parts from https://github.com/ChristofHenkel/kaggle-birdclef2021-2nd-place/blob/main/data/ps_ds_2.py
         self.folds_csv = folds_csv
@@ -82,6 +83,8 @@ class BirdDataset(Dataset):
             self.transforms = train_aug
             if multiplier > 1:
                 self.df = pd.concat([self.df] * multiplier, ignore_index=True)
+
+        self.secondary_weight = secondary_weight if mode == "train" else 0
 
     def load_one(self, filename, offset, duration):
         #try:
@@ -139,12 +142,12 @@ class BirdDataset(Dataset):
         ## labels
         labels = torch.zeros((self.n_classes,))
         labels[self.bird2id[row['primary_label']]] = 1.0
-        # for x in ast.literal_eval(row['secondary_labels']):
-        #     try:
-        #         labels[self.bird2id[x]] = 1.0
-        #     except:
-        #         ## if not in 21 classes, ignore
-        #         continue
+        for x in ast.literal_eval(row['secondary_labels']):
+            try:
+                labels[self.bird2id[x]] = self.secondary_weight
+            except:
+                ## if not in 21 classes, ignore
+                continue
 
         ## weight
         weight = torch.tensor(row['weight'])
@@ -171,6 +174,7 @@ class BirdSEDDataset(Dataset):
             multiplier: int = 1,
             duration: int = 30,
             val_duration: int = 5,
+            secondary_weight: float = 1,
     ):
         ## many parts from https://github.com/ChristofHenkel/kaggle-birdclef2021-2nd-place/blob/main/data/ps_ds_2.py
         self.folds_csv = folds_csv
@@ -212,6 +216,8 @@ class BirdSEDDataset(Dataset):
             self.transforms = train_aug
             if multiplier > 1:
                 self.df = pd.concat([self.df] * multiplier, ignore_index=True)
+
+        self.secondary_weight = secondary_weight if mode == "train" else 0
 
     def load_one(self, filename, offset, duration):
         # try:
@@ -267,7 +273,7 @@ class BirdSEDDataset(Dataset):
         labels[self.bird2id[row['primary_label']]] = 1.0
         for x in ast.literal_eval(row['secondary_labels']):
             try:
-                labels[self.bird2id[x]] = 1.0
+                labels[self.bird2id[x]] = secondary_weight
             except:
                 ## if not in 21 classes, ignore
                 continue

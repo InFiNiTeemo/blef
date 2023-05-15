@@ -7,6 +7,8 @@
 #RESUME=$7
 
 
+# pretrain on 21 22
+
 # bce loss 0.603   0.84
 # sh train_single.sh 0 ./outs cls_nf0_v5 1 /kaggle/input nf0_v5_ pretrain_TimmClassifier_eca_nfnet_l0_0_last
 
@@ -57,6 +59,12 @@
 #sh train_single.sh 0 ./outs cls_ef_v0 2 /kaggle/input ef_v0 pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
 #sh train_single.sh 0 ./outs cls_ef_v0 3 /kaggle/input ef_v0 pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
 #sh train_single.sh 0 ./outs cls_ef_v0 4 /kaggle/input ef_v0 pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
+
+# sh train_single.sh 0 ./outs cls_ef_v0 5 /kaggle/input ef_v0 backup/2123/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
+# 2ndw 0.5
+sh train_single.sh 0 ./outs cls_ef_v7 0 /kaggle/input ef_v7 backup/2123/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
+# epoch 25
+# sh train_single.sh 0 ./outs cls_ef_v8 0 /kaggle/input ef_v8 backup/2123/pretrain_TimmClassifier_v3_tf_efficientnet_b0_0__e20
 
 
 # use set3
@@ -153,7 +161,8 @@
 
 
 # * sed * #
-sh train_single.sh 0 ./outs sed_ef_v0 0 /kaggle/input sed_v0
+# 54.3 18.4 84.3
+# sh train_single.sh 0 ./outs sed_ef_v0 0 /kaggle/input sed_v0
 
 
 
