@@ -683,7 +683,7 @@ class TimmClassifier_v3(nn.Module):
 
 
 
-class SedClassifier(nn.Module):
+class SEDClassifier(nn.Module):
     def __init__(self, encoder: str,
                  classes=21,
                  enable_masking=False,
@@ -747,8 +747,10 @@ class SedClassifier(nn.Module):
         x = x[:, 0, :]  # bs, ch, time -> bs, time 这里的time应该值得是dsr
 
         with torch.cuda.amp.autocast(enabled=False):
-            x = self.wav2img(x)  # bs, ch, mel, time
+            x = self.wav2img(x)  # bs, mel, time
             x = (x + 80) / 80
+
+        frames_num = x.size(2)
 
         if self.training and self.enable_masking:
             x = self.freq_mask(x)
@@ -762,8 +764,7 @@ class SedClassifier(nn.Module):
         x = x.transpose(1, 3)
 
 
-        ## TODO: better loop
-        x = self.encoder(x)[0] # 维度保持不变， c增加, b, mel减少
+        x = self.encoder(x)[0] # encoder会使维度保持不变， c增加, b, mel减少
             # if self.training:
             #     b, c, t, f = x.shape
             #     x = x.permute(0, 2, 1, 3)
@@ -783,8 +784,29 @@ class SedClassifier(nn.Module):
 
         clipwise_output, norm_att, segmentwise_output = self.att_block(x)
 
+        logit = torch.sum(norm_att * self.att_block.cla(x), dim=2)
+        # todo: check how it works
+        segmentwise_logit = self.att_block.cla(x).transpose(1, 2)
+        segmentwise_output = segmentwise_output.transpose(1, 2)
 
-        return {"logit": clipwise_output}
+        interpolate_ratio = frames_num // segmentwise_output.size(1)
+
+        # Get framewise output
+        framewise_output = interpolate(segmentwise_output,
+                                       interpolate_ratio)
+        framewise_output = pad_framewise_output(framewise_output, frames_num)
+
+        framewise_logit = interpolate(segmentwise_logit, interpolate_ratio)
+        framewise_logit = pad_framewise_output(framewise_logit, frames_num)
+
+        return {
+            "framewise_output": framewise_output,
+            "segmentwise_output": segmentwise_output,
+            "segmentwise_logit": segmentwise_logit,
+            "logit": logit,
+            "framewise_logit": framewise_logit,
+            "clipwise_output": clipwise_output
+        }
 
 
 class TimmClassifier(nn.Module):

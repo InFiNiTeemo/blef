@@ -1,8 +1,8 @@
 {
-  "network": "SEDClassifier",
+  "network": "TimmClassifier_v3",
   "encoder_params": {
     "encoder": "tf_efficientnet_b0",
-    "duration": 15,
+    "duration": 20,
     "val_duration": 5,
     "classes": 264,
     "backbone_params": {
@@ -20,6 +20,7 @@
       "top_db": null}
   },
   "train_transforms": "set_2",
+  "secondary_weight": 1,
   "multiplier": 1,
   "optimizer": {
     "train_bs": 16,
@@ -39,10 +40,9 @@
   "losses": [
     {
       "name": "BCEW",
-      "type": "BCEF2WLossCalculator",
+      "type": "BCEBirdLossCalculator",
       "weight": 1,
       "display": true
-
     }
   ]
 }

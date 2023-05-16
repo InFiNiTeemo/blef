@@ -144,6 +144,7 @@ class BirdDataset(Dataset):
         labels[self.bird2id[row['primary_label']]] = 1.0
         for x in ast.literal_eval(row['secondary_labels']):
             try:
+                # print(self.secondary_weight)
                 labels[self.bird2id[x]] = self.secondary_weight
             except:
                 ## if not in 21 classes, ignore
@@ -219,6 +220,7 @@ class BirdSEDDataset(Dataset):
 
         self.secondary_weight = secondary_weight if mode == "train" else 0
 
+
     def load_one(self, filename, offset, duration):
         # try:
         wav, sr = librosa.load(filename, sr=None, offset=offset, duration=duration)
@@ -273,7 +275,8 @@ class BirdSEDDataset(Dataset):
         labels[self.bird2id[row['primary_label']]] = 1.0
         for x in ast.literal_eval(row['secondary_labels']):
             try:
-                labels[self.bird2id[x]] = secondary_weight
+                labels[self.bird2id[x]] = self.secondary_weight
+                print(self.secondary_weight)
             except:
                 ## if not in 21 classes, ignore
                 continue

@@ -43,7 +43,11 @@ class BCEFocal2WayLoss(nn.Module):
     ## TODO: fix label smoothing
     def forward(self, input, target, mask=None):
         input_ = input["logit"]
-        w      = target['weight'].float().to(input_.device)
+        if "weight" in target.keys():
+            w      = target['weight'].float().to(input_.device)
+        else:
+            w = torch.tensor([1]).to(input_.device)
+
         target = target["labels"].float().to(input_.device).clamp(0.01, 0.99)
         
         framewise_output = input["framewise_logit"]
